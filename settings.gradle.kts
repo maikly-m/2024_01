@@ -16,6 +16,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://maven.weixin.qq.com")
+//        flatDir {
+//            dirs("libs") // This tells Gradle to look for AARs in the 'libs' directory
+//        }
     }
 }
 

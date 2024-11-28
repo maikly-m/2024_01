@@ -17,6 +17,9 @@ retrofit = "2.11.0"
 retrofitConverterGson = "2.9.0"
 gson = "2.10.1"
 loggingInterceptor = "4.12.0"
+timber = "5.0.1"
+wechatSdkAndroid = "6.8.0"
+qqsdk = "5.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +39,8 @@ squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", versi
 squareup-retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref ="retrofitConverterGson" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref ="gson" }
 loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref ="loggingInterceptor" }
+jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref ="timber" }
+tencent-mm-opensdk = { group = "com.tencent.mm.opensdk", name = "wechat-sdk-android", version.ref ="wechatSdkAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

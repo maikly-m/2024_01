@@ -1,14 +1,16 @@
+import org.gradle.internal.impldep.bsh.commands.dir
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 }
 
 android {
-    namespace = "com.example.2024_01"
+    namespace = "com.example.u"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.2024_01"
+        applicationId = "com.example.u"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -32,11 +34,14 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
 dependencies {
-
+    implementation(files("../libs/mid-sdk-2.10.jar"))
+    implementation(files("../libs/mta-sdk-2.0.0.jar"))
+    implementation(files("../libs/open_sdk_lite.jar"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -51,6 +56,8 @@ dependencies {
     implementation(libs.squareup.retrofit.converter.gson)
     implementation(libs.google.gson)
     implementation(libs.loggingInterceptor)
+    implementation(libs.jakewharton.timber)
+    implementation(libs.tencent.mm.opensdk)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
