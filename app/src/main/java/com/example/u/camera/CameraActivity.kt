@@ -30,9 +30,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NavUtils
 import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import com.example.u.R
+import com.example.u.uitls.setFullScreen
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -92,30 +94,6 @@ class CameraActivity : AppCompatActivity() {
         takePictureButton.setOnClickListener {
             takePicture()
         }
-    }
-
-    private fun setFullScreen(window: Window?): Pair<Int, Int>? {
-        if (window == null) return null
-        val attributes = window.attributes
-        var oldCutoutMode = 0
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            oldCutoutMode = attributes.layoutInDisplayCutoutMode
-            attributes.layoutInDisplayCutoutMode =
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-            window.attributes = attributes
-        }
-        val oldOption = window.decorView.systemUiVisibility
-        val option = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
-        window.decorView.systemUiVisibility = option
-        window.decorView.setOnSystemUiVisibilityChangeListener { visibility: Int ->
-            if ((visibility and View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                window.decorView.systemUiVisibility = option
-            }
-        }
-        return Pair(oldCutoutMode, oldOption)
     }
 
     fun getScreenSize(): Size {
