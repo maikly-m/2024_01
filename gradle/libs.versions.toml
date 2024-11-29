@@ -1,5 +1,8 @@
 [versions]
 agp = "8.6.0"
+autoValue = "1.9"
+autoValueGson = "1.3.1"
+zxingCore = "3.4.1"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -19,10 +22,13 @@ gson = "2.10.1"
 loggingInterceptor = "4.12.0"
 timber = "5.0.1"
 wechatSdkAndroid = "6.8.0"
-qqsdk = "5.0.1"
+zxingAndroidEmbedded = "4.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+auto-value = { module = "com.google.auto.value:auto-value", version.ref = "autoValue" }
+auto-value-gson = { module = "com.ryanharter.auto.value:auto-value-gson", version.ref = "autoValueGson" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxingCore" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -41,6 +47,7 @@ google-gson = { group = "com.google.code.gson", name = "gson", version.ref ="gso
 loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref ="loggingInterceptor" }
 jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref ="timber" }
 tencent-mm-opensdk = { group = "com.tencent.mm.opensdk", name = "wechat-sdk-android", version.ref ="wechatSdkAndroid" }
+zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

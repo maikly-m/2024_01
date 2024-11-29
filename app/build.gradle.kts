@@ -1,5 +1,3 @@
-import org.gradle.internal.impldep.bsh.commands.dir
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -22,11 +20,17 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
         release {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -37,8 +41,13 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        dataBinding = true
         viewBinding = true
         buildConfig = true
+    }
+
+    packagingOptions {
+        exclude("META-INF/gradle/incremental.annotation.processors")
     }
 }
 
@@ -62,6 +71,12 @@ dependencies {
     implementation(libs.loggingInterceptor)
     implementation(libs.jakewharton.timber)
     implementation(libs.tencent.mm.opensdk)
+    implementation(libs.auto.value.gson)   // AutoValue Gson 扩展库
+    annotationProcessor(libs.auto.value)  // AutoValue 注解处理器
+    annotationProcessor(libs.auto.value.gson)   // Gson 扩展的注解处理器
+    implementation(libs.zxing.core)  // ZXing 核心库
+    implementation(libs.zxing.android.embedded)  // ZXing Android 嵌入式库
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

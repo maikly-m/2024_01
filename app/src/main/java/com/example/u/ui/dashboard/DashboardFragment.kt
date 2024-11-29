@@ -20,6 +20,7 @@ import androidx.lifecycle.coroutineScope
 import com.example.u.R
 import com.example.u.camera.CameraActivity
 import com.example.u.databinding.FragmentDashboardBinding
+import com.example.u.scan_code.ScanTestActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -71,6 +72,11 @@ class DashboardFragment : Fragment() {
         }
         binding.btnGallery.setOnClickListener {
             openGallery()
+        }
+        binding.btnScanTest.setOnClickListener {
+            Intent(requireActivity(), ScanTestActivity::class.java).apply {
+                startActivity(this)
+            }
         }
         dashboardViewModel.text.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
