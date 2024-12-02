@@ -62,7 +62,9 @@ class HomeFragment : Fragment() {
         binding.btnCamera.setOnClickListener {
             findNavController().navigate(R.id.home2camera)
         }
-
+        binding.btnRecycleView.setOnClickListener {
+            findNavController().navigate(R.id.home2recycle_view)
+        }
         return root
     }
 
