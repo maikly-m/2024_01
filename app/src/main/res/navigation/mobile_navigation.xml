@@ -3,13 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home" >
+    app:startDestination="@+id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.u.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/home2rich_text"
+            app:destination="@+id/navigation_rich_text" />
+        <action
+            android:id="@+id/home2permission"
+            app:destination="@+id/navigation_permission" />
+        <action
+            android:id="@+id/home2text_test"
+            app:destination="@+id/navigation_text_test" />
+        <action
+            android:id="@+id/home2camera"
+            app:destination="@+id/navigation_camera" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -22,4 +35,25 @@
         android:name="com.example.u.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
-</navigation >
+
+    <fragment
+        android:id="@+id/navigation_text_test"
+        android:name="com.example.u.ui.test.TextTestFragment"
+        android:label="text测试"
+        tools:layout="@layout/fragment_text_test" />
+    <fragment
+        android:id="@+id/navigation_rich_text"
+        android:name="com.example.u.ui.test.RichTextFragment"
+        android:label="富文本"
+        tools:layout="@layout/fragment_rich_text" />
+    <fragment
+        android:id="@+id/navigation_permission"
+        android:name="com.example.u.ui.test.PermissionFragment"
+        android:label="权限测试"
+        tools:layout="@layout/fragment_permission" />
+    <fragment
+        android:id="@+id/navigation_camera"
+        android:name="com.example.u.ui.test.CameraFragment"
+        android:label="相机测试"
+        tools:layout="@layout/fragment_camera" />
+</navigation>

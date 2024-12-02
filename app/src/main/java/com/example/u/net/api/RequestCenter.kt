@@ -11,7 +11,4 @@ interface RequestCenter {
     @GET("/banner/json")
     suspend fun getBanner(): BaseModel<MutableList<Banner>>
 
-    @GET("/banner/json")
-    fun getBannerCall(): Call<BaseModel<MutableList<Banner>>>
-
 }

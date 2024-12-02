@@ -47,7 +47,6 @@ class DashboardFragment : Fragment() {
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        initView(dashboardViewModel)
         return root
     }
 
@@ -56,114 +55,6 @@ class DashboardFragment : Fragment() {
         _binding = null
     }
 
-    private fun initView(dashboardViewModel: DashboardViewModel) {
-        binding.btnToast.setOnClickListener {
-            lifecycle.coroutineScope.launch(Dispatchers.IO) {
-                dashboardViewModel.setText("test")
-            }
-        }
-        binding.btnRequest.setOnClickListener {
-            dashboardViewModel.getTextFlow()
-        }
-        binding.btnCamera.setOnClickListener {
-            Intent(requireActivity(), CameraActivity::class.java).apply {
-                startActivity(this)
-            }
-        }
-        binding.btnGallery.setOnClickListener {
-            openGallery()
-        }
-        binding.btnScanTest.setOnClickListener {
-            Intent(requireActivity(), ScanTestActivity::class.java).apply {
-                startActivity(this)
-            }
-        }
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-        }
-        dashboardViewModel.textFlow.observe(viewLifecycleOwner) {
-            if (TextUtils.isEmpty(it)) {
-                return@observe
-            }
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    // 获取系统相册图片
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
-            // 例如，你可以将选中的图片显示到 ImageView 中
-            binding.imgGallery.setImageURI(uri)
-            getMimeType(uri, requireContext()).let {
-                //image/jpeg 对应 JPG 文件
-                //image/png 对应 PNG 文件
-                //image/gif 对应 GIF 文件
-                when (it) {
-                    "image/jpeg" -> {
-                        Timber.d("pickImageLauncher image/jpeg")
-                    }
-                    "image/png" -> {
-                        Timber.d("pickImageLauncher image/png")
-                    }
-                    "image/gif" -> {
-                        Timber.d("pickImageLauncher image/gif")
-                    }
-                }
-            }
-//            saveUriToFile(requireContext(), uri, File((requireContext().getExternalFilesDir(null)?.absolutePath
-//                ?: "") +"/test.jpg"))
-        }
-    }
-
-    private fun openGallery() {
-        pickImageLauncher.launch("image/*")
-    }
-
-    private fun getMimeType(uri: Uri, context: Context): String? {
-        val contentResolver: ContentResolver = context.contentResolver
-        return contentResolver.getType(uri)
-    }
-
-    fun uriToBitmap(context: Context, uri: Uri): Bitmap? {
-        return try {
-            // 获取 ContentResolver
-            val contentResolver: ContentResolver = context.contentResolver
-            // 打开输入流并转换为 Bitmap
-            val inputStream: InputStream? = contentResolver.openInputStream(uri)
-            BitmapFactory.decodeStream(inputStream)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-    private fun saveUriToFile(context: Context, uri: Uri, destinationFile: File): Boolean {
-        try {
-            // 获取 ContentResolver
-            val contentResolver: ContentResolver = context.contentResolver
-
-            // 打开输入流
-            val inputStream: InputStream = contentResolver.openInputStream(uri) ?: return false
-
-            // 创建输出流，准备将数据保存到文件
-            val outputStream = FileOutputStream(destinationFile)
-
-            // 读取数据流并写入文件
-            val buffer = ByteArray(1024)
-            var bytesRead: Int
-            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-                outputStream.write(buffer, 0, bytesRead)
-            }
-
-            // 关闭流
-            inputStream.close()
-            outputStream.close()
-
-            return true // 成功保存文件
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return false // 失败
-        }
-    }
 
 
 }

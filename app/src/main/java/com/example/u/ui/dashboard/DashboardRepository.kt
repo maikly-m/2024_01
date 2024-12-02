@@ -16,9 +16,6 @@ class DashboardRepository(private val service: RetrofitClient) : BaseRepository(
 
     private suspend fun requestBanner() =
         handleResponse(service.create(RequestCenter::class.java).getBanner())
-
-
-
 }
 
 

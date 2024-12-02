@@ -76,7 +76,7 @@ dependencies {
     annotationProcessor(libs.auto.value.gson)   // Gson 扩展的注解处理器
     implementation(libs.zxing.core)  // ZXing 核心库
     implementation(libs.zxing.android.embedded)  // ZXing Android 嵌入式库
-
+    implementation(libs.jsoup)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,42 +13,36 @@
         android:id="@+id/btn_permission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test_permission"
+        android:text="权限测试"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginEnd="8dp" />
 
-    <EditText
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btn_rich_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:text="富文本"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="30dp"
-        android:textAlignment="textStart"
-        android:textSize="20sp"
-        android:textColorHint="@color/purple_200"
-        android:textColor="@color/black"
-        android:hint="pw"
-        android:inputType="textVisiblePassword"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginEnd="8dp" />
 
-    <TextView
-        android:id="@+id/tv_tip"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_home"
-        android:text="aaa"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="15sp"/>
-</androidx.constraintlayout.widget.ConstraintLayout >
+    <Button
+        android:id="@+id/btn_text_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="text测试"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <Button
+        android:id="@+id/btn_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="camera测试"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp" />
+
+</LinearLayout >
