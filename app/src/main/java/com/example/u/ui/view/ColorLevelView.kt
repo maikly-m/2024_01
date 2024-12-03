@@ -34,7 +34,7 @@ class ColorLevelView(context: Context, attrs: AttributeSet) : View(context, attr
         rectHeight = DisplayUtils.dp2px(context, 10f).toFloat()
 
         // 加载图片资源
-        image = BitmapFactory.decodeResource(context.resources, R.drawable.ic_piano_qp_video)
+        image = BitmapFactory.decodeResource(context.resources, R.drawable.ic_qp_video)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

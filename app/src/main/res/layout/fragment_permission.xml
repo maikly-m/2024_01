@@ -8,6 +8,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.notifications.NotificationsFragment" >
 
+    <include
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        layout="@layout/test_header"
+        android:id="@+id/header" />
+
     <Button
         android:id="@+id/btn_test"
         android:layout_width="wrap_content"
@@ -26,5 +32,32 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp" />
 
+    <Button
+        android:id="@+id/btn_test_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="btn_test_state"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp" />
+    <Button
+        android:id="@+id/btn_test_state2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="btn_test_state"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <ImageView
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:id="@+id/iv_test_round"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/bg_test_code"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp" />
 
 </LinearLayout>

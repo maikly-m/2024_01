@@ -56,7 +56,11 @@
         android:id="@+id/navigation_permission"
         android:name="com.example.u.ui.test.PermissionFragment"
         android:label="权限测试"
-        tools:layout="@layout/fragment_permission" />
+        tools:layout="@layout/fragment_permission" >
+        <action
+            android:id="@+id/permission2custom_view"
+            app:destination="@+id/navigation_custom_view" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_camera"
         android:name="com.example.u.ui.test.CameraFragment"
