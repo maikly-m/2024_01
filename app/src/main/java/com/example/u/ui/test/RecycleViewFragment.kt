@@ -4,11 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.u.R
 import com.example.u.databinding.FragmentRecycleViewBinding
+import com.example.u.databinding.ItemCardViewBinding
 import com.example.u.databinding.RecycleViewItemBinding
 import com.example.u.ui.viewolder.ViewHolder
 import timber.log.Timber
@@ -46,6 +51,14 @@ class RecycleViewFragment : Fragment() {
         // 禁用 RecyclerView 滚动
         recyclerView2.isNestedScrollingEnabled = false
 
+        val recyclerView3 = binding.recyclerView3
+        // 设置 GridLayoutManager，列数为 3
+        recyclerView3.layoutManager = GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)
+        // 创建适配器并设置给 RecyclerView
+        val items3 = List(30) { "Card ${it + 1}" }  // 创建 30 个卡片
+        recyclerView3.adapter = CardAdapter(items3)
+        recyclerView3.isNestedScrollingEnabled = false
+
         return root
     }
 
@@ -53,21 +66,6 @@ class RecycleViewFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-//    inner class MyAdapter(private val items: List<String>) : RecyclerView.Adapter<ViewHolder>() {
-//
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-//        val binding = RecycleViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-//        return ViewHolder(binding as ViewDataBinding)
-//    }
-//
-//    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        val binding: RecycleViewItemBinding = holder.mBinding as RecycleViewItemBinding
-//        binding.tvItem.text = (items[position])
-//    }
-//
-//    override fun getItemCount(): Int = items.size
-//}
     inner class MyAdapter(private val items: List<String>) : RecyclerView.Adapter<MyViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -99,6 +97,40 @@ class RecycleViewFragment : Fragment() {
         fun bind(item: String) {
             binding.item = item
             binding.executePendingBindings()
+        }
+    }
+
+    inner class CardAdapter(private val items: List<String>) : RecyclerView.Adapter<MyCardViewHolder>() {
+        // 创建新的卡片视图
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyCardViewHolder {
+            val view = ItemCardViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return MyCardViewHolder(view)
+        }
+
+        // 绑定数据到卡片视图
+        override fun onBindViewHolder(holder: MyCardViewHolder, position: Int) {
+            holder.bind(items[position])
+        }
+
+        // 返回列表的大小
+        override fun getItemCount(): Int {
+            return items.size
+        }
+    }
+
+
+    // ViewHolder class to hold item views
+    inner class MyCardViewHolder(private val binding: ItemCardViewBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+
+        }
+
+        fun bind(item: String) {
+            binding.item = item
+            binding.executePendingBindings()
+
+            binding.textView.text = item
         }
     }
 }

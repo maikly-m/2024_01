@@ -25,6 +25,9 @@
         <action
             android:id="@+id/home2recycle_view"
             app:destination="@+id/navigation_recycle_view" />
+        <action
+            android:id="@+id/home2custom_view"
+            app:destination="@+id/navigation_custom_view" />
     </fragment>
 
     <fragment
@@ -64,4 +67,9 @@
         android:name="com.example.u.ui.test.RecycleViewFragment"
         android:label="recycle_view测试"
         tools:layout="@layout/fragment_recycle_view" />
+    <fragment
+        android:id="@+id/navigation_custom_view"
+        android:name="com.example.u.ui.test.CustomFragment"
+        android:label="custom_view测试"
+        tools:layout="@layout/fragment_custom" />
 </navigation>

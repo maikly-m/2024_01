@@ -65,6 +65,9 @@ class HomeFragment : Fragment() {
         binding.btnRecycleView.setOnClickListener {
             findNavController().navigate(R.id.home2recycle_view)
         }
+        binding.btnCustomView.setOnClickListener {
+            findNavController().navigate(R.id.home2custom_view)
+        }
         return root
     }
 
