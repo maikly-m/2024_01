@@ -71,6 +71,9 @@ class HomeFragment : Fragment() {
         binding.btnLoadMore.setOnClickListener {
             findNavController().navigate(R.id.home2load_more)
         }
+        binding.btnNetTest.setOnClickListener {
+            findNavController().navigate(R.id.home2net_test)
+        }
         return root
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GsonUtil {
-    private static Gson gson = null;
+    public static Gson gson = null;
 
     static {
         //            gson = new Gson();

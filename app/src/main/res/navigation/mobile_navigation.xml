@@ -31,6 +31,9 @@
         <action
             android:id="@+id/home2load_more"
             app:destination="@+id/navigation_load_more" />
+        <action
+            android:id="@+id/home2net_test"
+            app:destination="@+id/navigation_net_test" />
     </fragment>
 
     <fragment
@@ -84,4 +87,9 @@
         android:name="com.example.u.ui.test.LoadMoreFragment"
         android:label="load more 测试"
         tools:layout="@layout/fragment_load_more" />
+    <fragment
+        android:id="@+id/navigation_net_test"
+        android:name="com.example.u.ui.test.NetTestFragment"
+        android:label="load more 测试"
+        tools:layout="@layout/fragment_net_test" />
 </navigation>
