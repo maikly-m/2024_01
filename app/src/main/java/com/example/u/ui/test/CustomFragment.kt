@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
+import com.bumptech.glide.Glide
 import com.example.u.R
 import com.example.u.camera.CameraActivity
 import com.example.u.databinding.FragmentCustomBinding
@@ -47,6 +48,12 @@ class CustomFragment : Fragment() {
 
         _binding = FragmentCustomBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        Glide.with(requireContext())
+            .load(requireContext().getDrawable(R.drawable.bg_test_code))  // 指定图片 URL 或资源 ID
+            .circleCrop()
+            .into( binding.ivGlide)
+
 
         return root
     }

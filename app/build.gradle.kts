@@ -78,6 +78,9 @@ dependencies {
     implementation(libs.zxing.core)  // ZXing 核心库
     implementation(libs.zxing.android.embedded)  // ZXing Android 嵌入式库
     implementation(libs.jsoup)
+    implementation(libs.glide)  // Glide 的核心库
+    annotationProcessor(libs.compiler)  // Glide 的注解处理器，用于生成 Glide API
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
