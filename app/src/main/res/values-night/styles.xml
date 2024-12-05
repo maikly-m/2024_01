@@ -1,0 +1,5 @@
+<resources>
+
+    <style name="Widget.Theme.NoActionBar.MyView" parent="">
+    </style>
+</resources>

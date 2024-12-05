@@ -68,6 +68,9 @@ class HomeFragment : Fragment() {
         binding.btnCustomView.setOnClickListener {
             findNavController().navigate(R.id.home2custom_view)
         }
+        binding.btnLoadMore.setOnClickListener {
+            findNavController().navigate(R.id.home2load_more)
+        }
         return root
     }
 
