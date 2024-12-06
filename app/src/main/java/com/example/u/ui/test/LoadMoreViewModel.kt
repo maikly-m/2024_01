@@ -1,19 +1,21 @@
 package com.example.u.ui.test
 
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.u.provider.GetProvider
 import com.example.u.uitls.thread.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class LoadMoreViewModel : ViewModel() {
 
+    private var loadMoreDataJob: Job? = null
     private var page = 1
     private val pageSize = 4
-    val allData = mutableListOf<Item>()  // 存储所有数据，防止重复加载
+    val allData = mutableListOf<Item>()  // 存储所有数据
     val removeIndex = mutableSetOf<Int>()  // 移除项
 
     private val _isRefreshing = SingleLiveEvent<Boolean>()
@@ -25,7 +27,6 @@ class LoadMoreViewModel : ViewModel() {
     fun refreshData() {
         viewModelScope.launch {
             page = 1
-            allData.clear()  // 清空数据
             loadMoreData()   // 重新加载第一页
         }
     }
@@ -35,9 +36,14 @@ class LoadMoreViewModel : ViewModel() {
     }
 
     fun loadMoreData() {
-        viewModelScope.launch {
+        val active = loadMoreDataJob?.isActive
+        Timber.d("loadMoreData active=${active}")
+        if (active == true){
+            return
+        }
+        loadMoreDataJob = viewModelScope.launch(Dispatchers.IO) {
             _isRefreshing.postValue(page == 1) // 下拉刷新时显示刷新动画
-
+            Timber.d("loadMoreData start")
             // 模拟网络请求加载数据
             val newItems = fetchDataFromServer(page, pageSize)
             Timber.d("loadMoreData newItems.size=${newItems.size}")
@@ -67,10 +73,12 @@ class LoadMoreViewModel : ViewModel() {
 
             Timber.d("loadMoreData allData.size=${allData.size}")
         }
+        Timber.d("loadMoreData ...")
     }
 
     // 模拟从服务器获取数据
-    private fun fetchDataFromServer(page: Int, pageSize: Int): List<Item.DataItem> {
+    private suspend fun fetchDataFromServer(page: Int, pageSize: Int): List<Item.DataItem> {
+        delay(300)
         if (page > 4) {
             return arrayListOf()
         }

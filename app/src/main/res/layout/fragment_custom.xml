@@ -29,4 +29,15 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <Button
+        android:background="@drawable/bg_round_black_ripple"
+        android:id="@+id/tv_test"
+        android:text="Test"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_width="100dp"
+        android:layout_height="40dp"/>
+
 </LinearLayout >

@@ -32,7 +32,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.u.R
 import com.example.u.camera.preview.PreSize
-import com.example.u.ui.dashboard.DashboardViewModel
 import com.example.u.uitls.setFullScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -439,7 +438,7 @@ class CameraActivity : AppCompatActivity() {
 
             val file = File(
                 getExternalFilesDir(null),
-                "photo_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())}.jpg"
+                "photo_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(Date())}.jpg"
             )
             try {
                 Timber.d("onCaptureCompleted outputStream ${file.absolutePath}")

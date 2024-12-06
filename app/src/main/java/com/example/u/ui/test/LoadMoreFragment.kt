@@ -14,8 +14,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.u.databinding.FragmentLoadMoreBinding
 import com.example.u.databinding.ItemCardViewBinding
 import com.example.u.databinding.ItemNoMoreViewBinding
-import timber.log.Timber
-import java.util.Timer
 
 class LoadMoreFragment : Fragment() {
 
@@ -52,7 +50,7 @@ class LoadMoreFragment : Fragment() {
         removeIndex = viewModel.removeIndex
 
         // 初始化 RecyclerView 和 Adapter
-        adapter = CardAdapter( viewModel.allData)
+        adapter = CardAdapter(viewModel.allData)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -72,7 +70,7 @@ class LoadMoreFragment : Fragment() {
                 val totalItemCount = layoutManager.itemCount
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
-                if (totalItemCount <= (lastVisibleItem + 3)) {
+                if (totalItemCount <= (lastVisibleItem + 2)) {
                     viewModel.loadMoreData()
                 }
             }
@@ -126,8 +124,10 @@ class LoadMoreFragment : Fragment() {
             adapter.removeItems(removeIndex)
         }
 
-        // 初始加载数据
-        viewModel.loadMoreData()
+        if (viewModel.allData.isEmpty()){
+            // 初始加载数据
+            viewModel.loadMoreData()
+        }
 
         return root
     }
