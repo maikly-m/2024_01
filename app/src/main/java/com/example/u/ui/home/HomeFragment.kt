@@ -55,6 +55,9 @@ class HomeFragment : Fragment() {
         binding.btnNetTest.setOnClickListener {
             findNavController().navigate(R.id.home2net_test)
         }
+        binding.btnDownloadAndInstall.setOnClickListener {
+            findNavController().navigate(R.id.home2download_and_install)
+        }
         return root
     }
 

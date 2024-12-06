@@ -34,6 +34,9 @@
         <action
             android:id="@+id/home2net_test"
             app:destination="@+id/navigation_net_test" />
+        <action
+            android:id="@+id/home2download_and_install"
+            app:destination="@+id/navigation_download_and_install" />
     </fragment>
 
     <fragment
@@ -92,4 +95,9 @@
         android:name="com.example.u.ui.test.NetTestFragment"
         android:label="load more 测试"
         tools:layout="@layout/fragment_net_test" />
+    <fragment
+        android:id="@+id/navigation_download_and_install"
+        android:name="com.example.u.ui.test.DownloadAndInstallFragment"
+        android:label="install 测试"
+        tools:layout="@layout/fragment_download_and_install" />
 </navigation>
