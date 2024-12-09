@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.u.R
 import com.example.u.databinding.FragmentCustomBinding
@@ -31,6 +32,9 @@ class CustomFragment : Fragment() {
             .circleCrop()
             .into( binding.ivGlide)
 
+        binding.btnDownloadAndInstall.setOnClickListener {
+            findNavController().navigate(R.id.custom_view2download_and_install)
+        }
 
         return root
     }

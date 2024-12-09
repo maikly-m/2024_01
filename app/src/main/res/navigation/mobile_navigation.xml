@@ -84,7 +84,11 @@
         android:id="@+id/navigation_custom_view"
         android:name="com.example.u.ui.test.CustomFragment"
         android:label="custom_view测试"
-        tools:layout="@layout/fragment_custom" />
+        tools:layout="@layout/fragment_custom" >
+        <action
+            android:id="@+id/custom_view2download_and_install"
+            app:destination="@+id/navigation_download_and_install" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_load_more"
         android:name="com.example.u.ui.test.LoadMoreFragment"
@@ -93,11 +97,15 @@
     <fragment
         android:id="@+id/navigation_net_test"
         android:name="com.example.u.ui.test.NetTestFragment"
-        android:label="load more 测试"
+        android:label="net test 测试"
         tools:layout="@layout/fragment_net_test" />
     <fragment
         android:id="@+id/navigation_download_and_install"
         android:name="com.example.u.ui.test.DownloadAndInstallFragment"
         android:label="install 测试"
-        tools:layout="@layout/fragment_download_and_install" />
+        tools:layout="@layout/fragment_download_and_install" >
+        <action
+            android:id="@+id/download_and_install2home"
+            app:destination="@+id/navigation_home" />
+    </fragment>
 </navigation>

@@ -44,7 +44,7 @@
         android:id="@+id/btn_test_state2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="btn_test_state"
+        android:text="custom_view"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp" />
