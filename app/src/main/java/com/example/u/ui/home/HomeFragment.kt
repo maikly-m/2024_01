@@ -9,10 +9,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.u.R
 import com.example.u.databinding.FragmentHomeBinding
+import timber.log.Timber
 
 class HomeFragment : Fragment() {
 
@@ -80,6 +82,11 @@ class HomeFragment : Fragment() {
             }
         }
 
+        setFragmentResultListener("test"){ key, bundle ->
+            Timber.d("setFragmentResultListener key=${key}")
+            Timber.d("setFragmentResultListener bundle key=${bundle.getString("key")}")
+        }
+
         return root
     }
 
@@ -91,8 +98,6 @@ class HomeFragment : Fragment() {
     private fun init() {
 
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

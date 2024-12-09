@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import com.example.u.databinding.FragmentSlideVerifyBinding
 import com.slide.verify.SlideVerifyView
@@ -60,6 +61,10 @@ class SlideVerifyFragment : Fragment() {
                     .show()
                 return "可以走了"
             }
+        })
+
+        setFragmentResult("test",  Bundle().apply {
+            putString("key", "ha")
         })
 
         return root
