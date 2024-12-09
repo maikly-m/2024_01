@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.ImageFormat
+import android.graphics.Matrix
 import android.graphics.Point
 import android.graphics.SurfaceTexture
 import android.hardware.camera2.CameraAccessException
@@ -129,61 +130,10 @@ class CameraActivity : AppCompatActivity() {
                 height: Int
             ) {
                 // 获取默认相机 ID
-                try {
-                    cameraId = getBackCameraId() ?: cameraManager.cameraIdList[0] // 使用后置摄像头（ID 0）
-                    // cameraId = getFrontCameraId() ?: cameraManager.cameraIdList[0] // 使用后置摄像头（ID 0）
-
-                    // 获取相机特性
-                    val characteristics = cameraManager.getCameraCharacteristics(cameraId)
-                    val map =
-                        characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
-                    // 获取支持的预览尺寸
-                    val outputSizes = map?.getOutputSizes(SurfaceTexture::class.java)
-                    val bestSize = chooseOptimalSize(outputSizes)
-
-                    // 获取相机支持的输出格式和尺寸
-                    val size = choosePictureSize(outputSizes)
-
-                    Timber.d("bestSize = ${bestSize.toString()}")
-                    Timber.d("size = ${size.toString()}")
-                    imageReader =
-                        ImageReader.newInstance(size.width, size.height, ImageFormat.JPEG, 1)
-                    // 创建拍照回调
-                    imageReader!!.setOnImageAvailableListener({ reader ->
-                        saveImage(null)
-                    }, backgroundHandler)
-
-                    // 打开相机
-                    if (ActivityCompat.checkSelfPermission(
-                            this@CameraActivity,
-                            Manifest.permission.CAMERA
-                        ) != PackageManager.PERMISSION_GRANTED
-                    ) {
-                        return
-                    }
-
-                    // 配置输出尺寸为最佳尺寸
-                    val previewSize = bestSize
-                    surface.setDefaultBufferSize(previewSize.width, previewSize.height)
-                    val s = Surface(surface)
-                    cameraManager.openCamera(cameraId, object : CameraDevice.StateCallback() {
-                        override fun onOpened(camera: CameraDevice) {
-                            cameraDevice = camera
-                            createCameraPreviewSession(camera, s, bestSize)
-                        }
-
-                        override fun onDisconnected(camera: CameraDevice) {
-                            cameraDevice?.close()
-                        }
-
-                        override fun onError(camera: CameraDevice, error: Int) {
-                            Timber.e("Camera error: $error")
-                        }
-                    }, handler)
-                } catch (e: CameraAccessException) {
-                    e.printStackTrace()
-                }
+                openCamera2(surface)
             }
+
+
 
             override fun onSurfaceTextureSizeChanged(
                 surface: SurfaceTexture,
@@ -196,6 +146,86 @@ class CameraActivity : AppCompatActivity() {
             override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {}
         }
     }
+    private fun openCamera2(surface: SurfaceTexture) {
+        try {
+            cameraId = getBackCameraId() ?: cameraManager.cameraIdList[0] // 使用后置摄像头（ID 0）
+            // cameraId = getFrontCameraId() ?: cameraManager.cameraIdList[0] // 使用后置摄像头（ID 0）
+
+            // 获取相机特性
+            val characteristics = cameraManager.getCameraCharacteristics(cameraId)
+            val map =
+                characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+            // 获取支持的预览尺寸
+            val outputSizes = map?.getOutputSizes(SurfaceTexture::class.java)
+            val bestSize = chooseOptimalSize(outputSizes)
+
+            // 获取相机支持的输出格式和尺寸
+            val size = choosePictureSize(outputSizes)
+
+            Timber.d("bestSize = ${bestSize.toString()}")
+            Timber.d("size = ${size.toString()}")
+            imageReader =
+                ImageReader.newInstance(size.width, size.height, ImageFormat.JPEG, 1)
+            // 创建拍照回调
+            imageReader!!.setOnImageAvailableListener({ reader ->
+                saveImage(null)
+            }, backgroundHandler)
+
+            // 打开相机
+            if (ActivityCompat.checkSelfPermission(
+                    this@CameraActivity,
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+
+            // 配置输出尺寸为最佳尺寸
+            val previewSize = bestSize
+            updateTextureViewTransform(textureView.height, textureView.width, bestSize.width, bestSize.height)
+
+            Timber.e("surface ${surface}")
+            cameraManager.openCamera(cameraId, object : CameraDevice.StateCallback() {
+                override fun onOpened(camera: CameraDevice) {
+                    surface.setDefaultBufferSize(previewSize.width, previewSize.height)
+                    cameraDevice = camera
+                    val s = Surface(surface)
+                    createCameraPreviewSession(camera, s)
+                }
+
+                override fun onDisconnected(camera: CameraDevice) {
+                    cameraDevice?.close()
+                }
+
+                override fun onError(camera: CameraDevice, error: Int) {
+                    Timber.e("Camera error: $error")
+                }
+            }, handler)
+        } catch (e: CameraAccessException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun updateTextureViewTransform(viewWidth: Int, viewHeight: Int, previewWidth: Int, previewHeight: Int) {
+        val matrix = Matrix()
+
+        // 计算图像的宽高比
+        val scaleX = viewWidth.toFloat() / previewWidth.toFloat()
+        val scaleY = viewHeight.toFloat() / previewHeight.toFloat()
+
+        // 将宽高比不匹配的情况进行缩放
+        matrix.postScale(scaleX, scaleY)
+
+        // 如果需要，可以对齐居中或者调整位置
+        matrix.postTranslate(
+            (viewWidth - previewWidth * scaleX) / 2f,
+            (viewHeight - previewHeight * scaleY) / 2f
+        )
+
+        // 将变换矩阵应用到TextureView
+        textureView.setTransform(matrix)
+    }
+
     // 获取前置摄像头ID
     private fun getFrontCameraId(): String? {
         try {
@@ -330,7 +360,7 @@ class CameraActivity : AppCompatActivity() {
         return bestSize
     }
 
-    private fun createCameraPreviewSession(camera: CameraDevice, surface: Surface, bestSize: Size) {
+    private fun createCameraPreviewSession(camera: CameraDevice, surface: Surface) {
         try {
             val captureRequestBuilder = camera.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
             captureRequestBuilder.addTarget(surface)
@@ -360,8 +390,6 @@ class CameraActivity : AppCompatActivity() {
                 },
                 null
             )
-
-            backgroundHandler
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
@@ -473,12 +501,31 @@ class CameraActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         backgroundHandler = Handler(Looper.myLooper()!!)
+        if (ActivityCompat.checkSelfPermission(
+                this@CameraActivity,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+           if (textureView.isAvailable){
+               val matrix = Matrix()
+               matrix.postRotate(90f, textureView.width / 2f, textureView.height / 2f)
+               textureView.setTransform(matrix)
+
+               textureView.surfaceTexture?.let {
+                   openCamera2(it)
+               }
+           }
+        }
     }
 
     override fun onPause() {
         super.onPause()
         cameraDevice?.close()
+        captureSession?.close()
+        imageReader?.close()
     }
+
+
 }
 
 fun getBestPreviewOrder(
