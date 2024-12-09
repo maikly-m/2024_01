@@ -72,7 +72,8 @@ dependencies {
     implementation(libs.loggingInterceptor)
     implementation(libs.jakewharton.timber)
     implementation(libs.tencent.mm.opensdk)
-    implementation(libs.auto.value.gson)   // AutoValue Gson 扩展库
+    implementation(libs.auto.value.gson)
+    implementation(project(":SlideVerify"))   // AutoValue Gson 扩展库
     annotationProcessor(libs.auto.value)  // AutoValue 注解处理器
     annotationProcessor(libs.auto.value.gson)   // Gson 扩展的注解处理器
     implementation(libs.zxing.core)  // ZXing 核心库
@@ -80,7 +81,6 @@ dependencies {
     implementation(libs.jsoup)
     implementation(libs.glide)  // Glide 的核心库
     annotationProcessor(libs.compiler)  // Glide 的注解处理器，用于生成 Glide API
-
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

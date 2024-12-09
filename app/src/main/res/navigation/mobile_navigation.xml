@@ -37,6 +37,9 @@
         <action
             android:id="@+id/home2download_and_install"
             app:destination="@+id/navigation_download_and_install" />
+        <action
+            android:id="@+id/home2slide_verify"
+            app:destination="@+id/navigation_slide_verify" />
     </fragment>
 
     <fragment
@@ -107,5 +110,11 @@
         <action
             android:id="@+id/download_and_install2home"
             app:destination="@+id/navigation_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_slide_verify"
+        android:name="com.example.u.ui.test.SlideVerifyFragment"
+        android:label="滑动验证码测试"
+        tools:layout="@layout/fragment_slide_verify" >
     </fragment>
 </navigation>

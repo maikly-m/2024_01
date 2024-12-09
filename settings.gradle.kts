@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "2024_01"
 include(":app")
+include(":SlideVerify")

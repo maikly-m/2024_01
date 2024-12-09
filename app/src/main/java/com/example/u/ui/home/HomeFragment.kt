@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -19,6 +21,9 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private var backPressedTime: Long = 0
+    private val doubleBackToExitInterval: Long = 2000 // 2秒
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +63,23 @@ class HomeFragment : Fragment() {
         binding.btnDownloadAndInstall.setOnClickListener {
             findNavController().navigate(R.id.home2download_and_install)
         }
+        binding.btnVerify.setOnClickListener {
+            findNavController().navigate(R.id.home2slide_verify)
+        }
+
+
+        // 监听返回键操作
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (System.currentTimeMillis() - backPressedTime < doubleBackToExitInterval) {
+                // 双击返回键，退出应用
+                requireActivity().finish()
+            } else {
+                // 单击返回键，显示提示 Toast
+                Toast.makeText(requireContext(), "再按一次退出应用", Toast.LENGTH_SHORT).show()
+                backPressedTime = System.currentTimeMillis()
+            }
+        }
+
         return root
     }
 
