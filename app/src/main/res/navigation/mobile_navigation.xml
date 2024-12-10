@@ -40,6 +40,9 @@
         <action
             android:id="@+id/home2slide_verify"
             app:destination="@+id/navigation_slide_verify" />
+        <action
+            android:id="@+id/home2media"
+            app:destination="@+id/navigation_media" />
     </fragment>
 
     <fragment
@@ -116,5 +119,11 @@
         android:name="com.example.u.ui.test.SlideVerifyFragment"
         android:label="滑动验证码测试"
         tools:layout="@layout/fragment_slide_verify" >
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_media"
+        android:name="com.example.u.ui.test.MediaFragment"
+        android:label="media测试"
+        tools:layout="@layout/fragment_media" >
     </fragment>
 </navigation>

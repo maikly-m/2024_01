@@ -33,7 +33,7 @@ class SlideVerifyFragment : Fragment() {
 
         val captcha = binding.captCha
         val btnMode = binding.btnMode
-        btnMode.setOnClickListener(View.OnClickListener {
+        btnMode.setOnClickListener {
             if (captcha.mode == SlideVerifyView.MODE_BAR) {
                 captcha.setMode(SlideVerifyView.MODE_NO_BAR)
                 btnMode.text = "滑动条模式"
@@ -41,7 +41,7 @@ class SlideVerifyFragment : Fragment() {
                 captcha.setMode(SlideVerifyView.MODE_BAR)
                 btnMode.text = "无滑动条模式"
             }
-        })
+        }
         captcha.setVerifyListener(object : SlideVerifyView.CaptchaListener {
             override fun onAccess(time: Long): String {
                 Toast.makeText(requireContext(), "验证成功", Toast.LENGTH_SHORT).show()

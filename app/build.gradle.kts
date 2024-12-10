@@ -81,6 +81,8 @@ dependencies {
     implementation(libs.jsoup)
     implementation(libs.glide)  // Glide 的核心库
     annotationProcessor(libs.compiler)  // Glide 的注解处理器，用于生成 Glide API
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
