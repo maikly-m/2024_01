@@ -219,9 +219,7 @@ fun saveImageToGallery(context: Context, imageFileName: String) {
 
 fun cropToSquareCenter(imagePath: String): Bitmap? {
     // 1. 加载原始图片
-    val originalBitmap = BitmapFactory.decodeFile(imagePath)
-
-    if (originalBitmap == null) return null
+    val originalBitmap = BitmapFactory.decodeFile(imagePath) ?: return null
 
     // 2. 计算裁切区域
     val width = originalBitmap.width

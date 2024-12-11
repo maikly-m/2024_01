@@ -1,3 +1,8 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -17,38 +22,65 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
 
     buildTypes {
-        debug {
+        getByName("debug") {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
-        release {
+        getByName("release") {
             isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-        buildConfig = true
-    }
+        flavorDimensions("default")
+        productFlavors {
+            create("default") {
+                dimension = "default"
+                buildConfigField("String", "productFlavors", "\"default\"")
+                manifestPlaceholders["PRODUCT_FLAVOR"] = "default"
+            }
+        }
 
-    packagingOptions {
-        exclude("META-INF/gradle/incremental.annotation.processors")
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+        buildFeatures {
+            dataBinding = true
+            viewBinding = true
+            buildConfig = true
+        }
+
+        packagingOptions {
+            exclude("META-INF/gradle/incremental.annotation.processors")
+        }
+
+        // 获取 UTC 时间并格式化为 "yyyyMMdd" 格式
+        val time =
+            DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(Instant.now())
+        println("afterEvaluate time=$time")
+        println("applicationVariants size=${applicationVariants.size}")
+        applicationVariants.all { variant ->
+            println("applicationVariants variant=$variant")
+            variant.outputs.all { output ->
+                if (output is BaseVariantOutputImpl) {
+                    val newFileName =
+                        "app-${variant.versionName}-${variant.versionCode}-${time}-${variant.versionName}.apk"
+                    output.outputFileName = newFileName
+                }
+                true
+            }
+        }
     }
 }
 
@@ -72,8 +104,8 @@ dependencies {
     implementation(libs.loggingInterceptor)
     implementation(libs.jakewharton.timber)
     implementation(libs.tencent.mm.opensdk)
-    implementation(libs.auto.value.gson)
-    implementation(project(":SlideVerify"))   // AutoValue Gson 扩展库
+    implementation(libs.auto.value.gson) // AutoValue Gson 扩展库
+    implementation(project(":SlideVerify"))
     annotationProcessor(libs.auto.value)  // AutoValue 注解处理器
     annotationProcessor(libs.auto.value.gson)   // Gson 扩展的注解处理器
     implementation(libs.zxing.core)  // ZXing 核心库

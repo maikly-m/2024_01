@@ -161,3 +161,58 @@
 #----------------------app内部的 bean interface annotation 自定义view等---------
 
 
+#------------------system--------
+# Please add these rules to your existing keep rules in order to suppress warnings.
+# This is generated automatically by the Android Gradle plugin.
+-dontwarn autovalue.shaded.com.google$.errorprone.annotations.$CanIgnoreReturnValue
+-dontwarn autovalue.shaded.com.google$.errorprone.annotations.$CompatibleWith
+-dontwarn autovalue.shaded.com.google$.errorprone.annotations.$ForOverride
+-dontwarn autovalue.shaded.com.google$.errorprone.annotations.$FormatMethod
+-dontwarn autovalue.shaded.com.google$.errorprone.annotations.concurrent.$GuardedBy
+-dontwarn autovalue.shaded.com.google$.errorprone.annotations.concurrent.$LazyInit
+-dontwarn javax.lang.model.SourceVersion
+-dontwarn javax.lang.model.element.AnnotationMirror
+-dontwarn javax.lang.model.element.AnnotationValue
+-dontwarn javax.lang.model.element.AnnotationValueVisitor
+-dontwarn javax.lang.model.element.Element
+-dontwarn javax.lang.model.element.ElementKind
+-dontwarn javax.lang.model.element.ElementVisitor
+-dontwarn javax.lang.model.element.ExecutableElement
+-dontwarn javax.lang.model.element.Name
+-dontwarn javax.lang.model.element.NestingKind
+-dontwarn javax.lang.model.element.PackageElement
+-dontwarn javax.lang.model.element.QualifiedNameable
+-dontwarn javax.lang.model.element.TypeElement
+-dontwarn javax.lang.model.element.TypeParameterElement
+-dontwarn javax.lang.model.element.VariableElement
+-dontwarn javax.lang.model.type.ArrayType
+-dontwarn javax.lang.model.type.DeclaredType
+-dontwarn javax.lang.model.type.ErrorType
+-dontwarn javax.lang.model.type.ExecutableType
+-dontwarn javax.lang.model.type.NoType
+-dontwarn javax.lang.model.type.NullType
+-dontwarn javax.lang.model.type.PrimitiveType
+-dontwarn javax.lang.model.type.TypeKind
+-dontwarn javax.lang.model.type.TypeMirror
+-dontwarn javax.lang.model.type.TypeVariable
+-dontwarn javax.lang.model.type.TypeVisitor
+-dontwarn javax.lang.model.type.WildcardType
+-dontwarn javax.lang.model.util.AbstractElementVisitor6
+-dontwarn javax.lang.model.util.ElementFilter
+-dontwarn javax.lang.model.util.Elements
+-dontwarn javax.lang.model.util.SimpleAnnotationValueVisitor6
+-dontwarn javax.lang.model.util.SimpleAnnotationValueVisitor8
+-dontwarn javax.lang.model.util.SimpleElementVisitor6
+-dontwarn javax.lang.model.util.SimpleElementVisitor8
+-dontwarn javax.lang.model.util.SimpleTypeVisitor6
+-dontwarn javax.lang.model.util.SimpleTypeVisitor8
+-dontwarn javax.lang.model.util.Types
+-dontwarn javax.tools.Diagnostic$Kind
+-dontwarn javax.tools.FileObject
+-dontwarn javax.tools.JavaFileManager$Location
+-dontwarn javax.tools.JavaFileObject$Kind
+-dontwarn javax.tools.JavaFileObject
+-dontwarn javax.tools.SimpleJavaFileObject
+-dontwarn javax.tools.StandardLocation
+
+
