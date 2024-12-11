@@ -3,7 +3,12 @@ package com.example.u.uitls
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
 import android.media.MediaScannerConnection
 import android.os.Build
 import android.os.Environment
@@ -11,6 +16,11 @@ import android.provider.MediaStore
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import id.zelory.compressor.Compressor
+import id.zelory.compressor.constraint.format
+import id.zelory.compressor.constraint.quality
+import id.zelory.compressor.constraint.resolution
+import id.zelory.compressor.constraint.size
 import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
@@ -203,6 +213,88 @@ fun saveImageToGallery(context: Context, imageFileName: String) {
             e.printStackTrace()
             Timber.d("Error copying image: ${e.message}")
         }
+    }
+}
+
+
+fun cropToSquareCenter(imagePath: String): Bitmap? {
+    // 1. 加载原始图片
+    val originalBitmap = BitmapFactory.decodeFile(imagePath)
+
+    if (originalBitmap == null) return null
+
+    // 2. 计算裁切区域
+    val width = originalBitmap.width
+    val height = originalBitmap.height
+    val size = Math.min(width, height) // 确定裁切区域的大小
+
+    val left = (width - size) / 2
+    val top = (height - size) / 2
+    val right = left + size
+    val bottom = top + size
+
+    // 3. 创建一个新的 Bitmap，作为裁切后的结果
+    val croppedBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(croppedBitmap)
+
+    // 4. 裁切并绘制到新的 Bitmap 上
+    val rectSrc = Rect(left, top, right, bottom)
+    val rectDst = Rect(0, 0, size, size)
+    canvas.drawBitmap(originalBitmap, rectSrc, rectDst, Paint())
+
+    // 5. 返回裁切后的 Bitmap
+    return croppedBitmap
+}
+
+
+fun saveBitmapToFile(bitmap: Bitmap, filePath: String, quality: Int): Boolean {
+    val file = File(filePath)
+    return try {
+        val outputStream = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+        outputStream.flush()
+        outputStream.close()
+        true
+    } catch (e: Exception) {
+        e.printStackTrace()
+        false
+    }
+}
+
+
+
+fun compressImage(imagePath: String, outputPath: String, quality: Int): Boolean {
+    // 1. 加载图片为 Bitmap
+    val originalBitmap = BitmapFactory.decodeFile(imagePath)
+
+    // 2. 创建压缩文件输出流
+    val outputFile = File(outputPath)
+    val fileOutputStream = FileOutputStream(outputFile)
+
+    // 3. 使用 JPEG 格式进行压缩
+    val isCompressed = originalBitmap.compress(Bitmap.CompressFormat.JPEG, quality, fileOutputStream)
+
+    // 4. 关闭输出流
+    fileOutputStream.flush()
+    fileOutputStream.close()
+
+    // 5. 返回压缩是否成功
+    return isCompressed
+}
+
+suspend fun compressImageWithCompressor(context: Context, imagePath: String): File {
+    val file = File(imagePath)
+    return Compressor.compress(context, file) {
+//        default(
+//            width = 612,
+//            height = 816,
+//            format = Bitmap.CompressFormat.JPEG,
+//            quality = 80
+//        )
+        resolution(1280, 720)
+        quality(80)
+        format(Bitmap.CompressFormat.JPEG)
+        size(2_097_152) // 2 MB
     }
 }
 

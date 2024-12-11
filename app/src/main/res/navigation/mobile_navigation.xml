@@ -43,6 +43,9 @@
         <action
             android:id="@+id/home2media"
             app:destination="@+id/navigation_media" />
+        <action
+            android:id="@+id/home2ali_slide_verify"
+            app:destination="@+id/navigation_ali_slide_verify" />
     </fragment>
 
     <fragment
@@ -125,5 +128,11 @@
         android:name="com.example.u.ui.test.MediaFragment"
         android:label="media测试"
         tools:layout="@layout/fragment_media" >
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_ali_slide_verify"
+        android:name="com.example.u.ui.test.AliSlideVerifyFragment"
+        android:label="ali_verify测试"
+        tools:layout="@layout/fragment_ali_slide_verify" >
     </fragment>
 </navigation>

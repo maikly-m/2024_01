@@ -83,6 +83,7 @@ dependencies {
     annotationProcessor(libs.compiler)  // Glide 的注解处理器，用于生成 Glide API
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
+    implementation(libs.compressor)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

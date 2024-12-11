@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebView Interaction</title>
+    <script type="text/javascript">
+        // 通过 JavaScript 调用原生方法
+        function sendDataToNative() {
+            // 获取返回值字符串
+            var message = "Hello from HTML!";
+            // 调用原生方法，将字符串返回给 Android 原生代码
+            testInterface.sendMessage(message);
+        }
+        function slideCallBack(data) {
+            window.testInterface.getSlideData(data);
+        }
+    </script>
+</head>
+<body>
+<h1>Click the button to send message to Native Android</h1>
+<button onclick="sendDataToNative()">Click Me</button>
+<button onclick="slideCallBack('data')">Click y</button>
+</body>
+</html>

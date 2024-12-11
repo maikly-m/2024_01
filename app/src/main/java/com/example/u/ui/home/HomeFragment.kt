@@ -71,6 +71,9 @@ class HomeFragment : Fragment() {
         binding.btnMedia.setOnClickListener {
             findNavController().navigate(R.id.home2media)
         }
+        binding.btnAliVerify.setOnClickListener {
+            findNavController().navigate(R.id.home2ali_slide_verify)
+        }
 
 
         // 监听返回键操作
