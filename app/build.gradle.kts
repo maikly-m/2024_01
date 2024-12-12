@@ -1,4 +1,5 @@
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+
+import com.android.build.api.variant.impl.VariantOutputImpl
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -6,7 +7,6 @@ import java.time.format.DateTimeFormatter
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-//    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -39,46 +39,44 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
-        flavorDimensions("default")
-        productFlavors {
-            create("default") {
-                dimension = "default"
-                buildConfigField("String", "productFlavors", "\"default\"")
-                manifestPlaceholders["PRODUCT_FLAVOR"] = "default"
-            }
+    }
+    flavorDimensions("default")
+    productFlavors {
+        create("default") {
+            dimension = "default"
+            buildConfigField("String", "productFlavors", "\"default\"")
+            manifestPlaceholders["PRODUCT_FLAVOR"] = "default"
         }
+    }
 
-        compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
-        }
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
-        buildFeatures {
-            dataBinding = true
-            viewBinding = true
-            buildConfig = true
-        }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+        buildConfig = true
+    }
 
-        packagingOptions {
-            exclude("META-INF/gradle/incremental.annotation.processors")
-        }
+    packagingOptions {
+        exclude("META-INF/gradle/incremental.annotation.processors")
+    }
 
-        // 获取 UTC 时间并格式化为 "yyyyMMdd" 格式
-        val time =
-            DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(Instant.now())
-        println("afterEvaluate time=$time")
-        println("applicationVariants size=${applicationVariants.size}")
-        applicationVariants.all { variant ->
-            println("applicationVariants variant=$variant")
-            variant.outputs.all { output ->
-                if (output is BaseVariantOutputImpl) {
-                    val newFileName =
-                        "app-${variant.versionName}-${variant.versionCode}-${time}-${variant.versionName}.apk"
+    // 获取 UTC 时间并格式化为 "yyyyMMdd" 格式
+    val time =
+        DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(Instant.now())
+    androidComponents {
+        onVariants { variant ->
+            println("onVariants name: ${variant.name}")
+            variant.outputs.forEach { output ->
+                if (output is VariantOutputImpl){
+                    val newFileName = "app-${android.defaultConfig.versionName}-${android.defaultConfig.versionCode}-${time}-${variant.name}.apk"
                     output.outputFileName = newFileName
                 }
-                true
             }
         }
     }
