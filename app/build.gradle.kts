@@ -74,7 +74,10 @@ android {
             println("onVariants name: ${variant.name}")
             variant.outputs.forEach { output ->
                 if (output is VariantOutputImpl){
-                    val newFileName = "app-${android.defaultConfig.versionName}-${android.defaultConfig.versionCode}-${time}-${variant.name}.apk"
+                    println("outputFileName = ${output.outputFileName.get()}")
+                    val substringAfterLast = output.outputFileName.get().substringAfterLast('.')
+                    println("substringAfterLast = $substringAfterLast")
+                    val newFileName = "app-${android.defaultConfig.versionName}-${android.defaultConfig.versionCode}-${time}-${variant.name}.${substringAfterLast}"
                     output.outputFileName = newFileName
                 }
             }
