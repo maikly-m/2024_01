@@ -11,12 +11,16 @@ import com.example.u.net.model.Banner
 import com.example.u.net.model.NetCallback
 import com.example.u.net.net.BaseRepository
 import com.example.u.net.net.RetrofitClient
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.coroutines.cancellation.CancellationException
 
 class NetTestViewModel : ViewModel() {
 
+    private var job: Job? = null
     private val _text = MutableLiveData<String>().apply {
         value = "This is notifications Fragment"
     }
@@ -26,22 +30,43 @@ class NetTestViewModel : ViewModel() {
     private val _textFlow = MutableStateFlow("")
     val textFlow: LiveData<String> = _textFlow.asLiveData()
 
-    fun getBanner(){
-        viewModelScope.launch {
+    fun getBanner() {
+        val active = job?.isActive
+        if (active == true) {
+            viewModelScope.launch {
+                _textFlow.emit("getTextFlow active")
+            }
+            return
+        }
+        job = viewModelScope.launch {
             val banner = homeRepository.getBanner()
             if (banner is NetCallback.Success) {
                 _textFlow.emit("getTextFlow ok")
                 Timber.e("getTextFlow: ok -- $banner")
             } else if (banner is NetCallback.Error) {
-                Timber.e("getTextFlow: fail -- "+banner.exception.msg )
+                Timber.e("getTextFlow: fail -- " + banner.exception.msg)
                 _textFlow.emit("getTextFlow fail")
+            }else{
+                cancel("err")
             }
         }
+
+        job?.invokeOnCompletion { exception ->
+            if (exception is CancellationException) {
+                Timber.e("Coroutine was cancelled!")
+                viewModelScope.launch {
+                    _textFlow.emit("getTextFlow fail")
+                }
+            } else {
+            }
+        }
+
     }
 
     private val homeRepository = NetTestRepository(RetrofitClient.instance)
 }
-class  NetTestRepository(private val service: RetrofitClient) : BaseRepository() {
+
+class NetTestRepository(private val service: RetrofitClient) : BaseRepository() {
     private val TAG = "NetTestRepository"
 
     suspend fun getBanner(): NetCallback<List<Banner>> {
