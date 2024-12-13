@@ -20,9 +20,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.u.R
-import com.example.u.databinding.FragmentNotificationsBinding
 import com.example.u.databinding.FragmentTextTestBinding
-import com.example.u.ui.notifications.NotificationsViewModel
+import com.github.gzuliyujiang.dialog.DialogConfig
+import com.github.gzuliyujiang.wheelpicker.OptionPicker
+import com.github.gzuliyujiang.wheelpicker.SexPicker
+import com.github.gzuliyujiang.wheelview.annotation.CurtainCorner
+import com.github.gzuliyujiang.wheelview.contract.TextProvider
+import java.io.Serializable
+
 
 class TextTestFragment : Fragment() {
 
@@ -115,11 +120,106 @@ class TextTestFragment : Fragment() {
         tvTip.setText(spannableString)
         tvTip.movementMethod = LinkMovementMethod.getInstance()
 
+//        MaterialDialog(requireContext())
+//            .show {
+//
+//            title(text = "test")
+//            listItems(items = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")) { _, index, _ ->
+//                Toast.makeText(requireContext(), "Selected: ${index + 1}", Toast.LENGTH_SHORT).show()
+//            }
+//            negativeButton(android.R.string.cancel)
+//        }
+
+        binding.btnTestPopupWindow.setOnClickListener {
+            //te()
+            onOptionBean()
+        }
+
+
+
+
         return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun onOptionBean() {
+        val data: MutableList<GoodsCategoryBean?> = ArrayList<GoodsCategoryBean?>()
+        data.add(GoodsCategoryBean(1, "食品生鲜"))
+        data.add(GoodsCategoryBean(2, "家用电器"))
+        data.add(GoodsCategoryBean(3, "家居生活"))
+        data.add(GoodsCategoryBean(4, "医疗保健"))
+        data.add(GoodsCategoryBean(5, "酒水饮料"))
+        data.add(GoodsCategoryBean(6, "图书音像"))
+
+        DialogConfig.getDialogColor().cancelTextColor(Color.BLUE)
+        DialogConfig.getDialogColor().okTextColor(Color.BLUE)
+
+        val picker = OptionPicker(requireActivity())
+        picker.okView.textSize = 20f
+        picker.topLineView.visibility = View.GONE
+
+        picker.setTitle("货物分类")
+        picker.setBodyWidth(140)
+        picker.setData(data)
+        picker.setDefaultPosition(2)
+        picker.setOnOptionPickedListener { position, item ->
+            Toast.makeText(
+                requireContext(),
+                "$position-$item",
+                Toast.LENGTH_SHORT
+            ).show();
+        }
+        val wheelLayout = picker.wheelLayout
+        wheelLayout.setIndicatorEnabled(false)
+        wheelLayout.setTextColor(Color.GRAY)
+        wheelLayout.setSelectedTextColor(Color.BLUE)
+        wheelLayout.setTextSize(15 * requireContext().resources.displayMetrics.scaledDensity)
+        //注：建议通过`setStyle`定制样式设置文字加大，若通过`setSelectedTextSize`设置，该解决方案会导致选择器展示时跳动一下
+        //wheelLayout.setStyle(R.style.WheelStyleDemo);
+        wheelLayout.setSelectedTextSize(17 * requireContext().resources.displayMetrics.scaledDensity)
+        wheelLayout.setSelectedTextBold(true)
+        wheelLayout.setCurtainEnabled(true)
+        wheelLayout.setCurtainColor(0x11010000)
+        wheelLayout.setCurtainCorner(CurtainCorner.ALL)
+        wheelLayout.setCurtainRadius(5 * requireContext().resources.displayMetrics.density)
+        wheelLayout.setOnOptionSelectedListener { position, item ->
+            picker.titleView.text = picker.wheelView.formatItem(position)
+        }
+
+        picker.show()
+    }
+
+    fun te(): Unit {
+        val picker = SexPicker(requireActivity())
+        picker.setBodyWidth(140)
+        picker.setIncludeSecrecy(false)
+        picker.setDefaultValue("女")
+        picker.setOnOptionPickedListener { position, item ->
+            Toast.makeText(
+                requireContext(),
+                "$position-$item",
+                Toast.LENGTH_SHORT
+            ).show();
+        }
+        picker.wheelLayout.setOnOptionSelectedListener { position, item ->
+            picker.titleView.text = picker.wheelView.formatItem(position)
+        }
+        picker.show()
+    }
+
+}
+class GoodsCategoryBean(var id: Int, var name: String) : Serializable, TextProvider {
+    override fun provideText(): String {
+        return name
+    }
+    override fun toString(): String {
+        return "GoodsCategoryBean{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}'
     }
 }

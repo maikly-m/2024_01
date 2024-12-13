@@ -117,6 +117,9 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
     implementation(libs.compressor)
+    implementation(libs.core)
+    implementation(libs.androidpicker.common)
+    implementation(libs.androidpicker.wheelpicker)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
