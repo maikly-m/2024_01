@@ -75,5 +75,26 @@ object Installer {
         context.startActivity(intent)
     }
 
+    fun getFileSizeWithOkHttp(url: String): Long {
+        val client = OkHttpClient()
+        var fileSize: Long = -1
+
+        try {
+            val request = Request.Builder()
+                .url(url)
+                .head() // 使用HEAD请求
+                .build()
+
+            val response = client.newCall(request).execute()
+            if (response.isSuccessful) {
+                fileSize = response.headers["Content-Length"]?.toLong() ?: -1
+            }
+            response.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return fileSize
+    }
 
 }

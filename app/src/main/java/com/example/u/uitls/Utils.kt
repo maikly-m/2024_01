@@ -8,11 +8,13 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Point
 import android.graphics.Rect
 import android.media.MediaScannerConnection
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Size
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -294,5 +296,34 @@ suspend fun compressImageWithCompressor(context: Context, imagePath: String): Fi
         format(Bitmap.CompressFormat.JPEG)
         size(2_097_152) // 2 MB
     }
+}
+
+
+fun getScreenWidth(context: Context): Int {
+    val displayMetrics = context.resources.displayMetrics
+    return displayMetrics.widthPixels
+}
+
+fun getScreenSizeWidth(context: Context): Int {
+    return getScreenSize(context).getWidth()
+}
+
+fun getScreenSizeHeight(context: Context): Int {
+    return getScreenSize(context).getHeight()
+}
+
+fun getScreenSize(context: Context): Size {
+    val windowManager = context.getSystemService(WindowManager::class.java)
+    val size: Size
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val windowMetrics = windowManager.currentWindowMetrics
+        size = Size(windowMetrics.bounds.width(), windowMetrics.bounds.height())
+    } else {
+        val display = windowManager.defaultDisplay
+        val point = Point()
+        display.getRealSize(point)
+        size = Size(point.x, point.y)
+    }
+    return size
 }
 

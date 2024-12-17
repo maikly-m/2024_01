@@ -117,7 +117,7 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
     implementation(libs.compressor)
-    implementation(libs.core)
+    implementation(libs.material.dialogs.core)
     implementation(libs.androidpicker.common)
     implementation(libs.androidpicker.wheelpicker)
 

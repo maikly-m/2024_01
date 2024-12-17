@@ -17,10 +17,12 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.u.R
 import com.example.u.databinding.FragmentTextTestBinding
+import com.example.u.dialog.ConfirmDialog
 import com.github.gzuliyujiang.dialog.DialogConfig
 import com.github.gzuliyujiang.wheelpicker.OptionPicker
 import com.github.gzuliyujiang.wheelpicker.SexPicker
@@ -136,6 +138,20 @@ class TextTestFragment : Fragment() {
         }
 
 
+        binding.btnTestDialog.setOnClickListener {
+            val c = ConfirmDialog.newInstance(true)
+                .setTitle("测试")
+                .setMessage("test  more  data ")
+                .setPositiveButton("确定", null)
+                .setCancelableOut(false)
+                .setNegativeButton("取消", object : ConfirmDialog.OnDialogClickListener{
+                    override fun onClick(dialog: DialogFragment) {
+                        dialog.dismissAllowingStateLoss()
+                    }
+                })
+
+                c.show(requireActivity().supportFragmentManager)
+        }
 
 
         return root
