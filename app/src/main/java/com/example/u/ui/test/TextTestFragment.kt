@@ -150,7 +150,7 @@ class TextTestFragment : Fragment() {
                     }
                 })
 
-                c.show(requireActivity().supportFragmentManager)
+                c.show(this)
         }
 
 
