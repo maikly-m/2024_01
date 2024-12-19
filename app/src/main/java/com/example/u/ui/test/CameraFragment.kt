@@ -24,6 +24,7 @@ import androidx.lifecycle.coroutineScope
 import com.example.u.camera.CameraActivity
 import com.example.u.databinding.FragmentCameraBinding
 import com.example.u.scan_code.ScanTestActivity
+import com.example.u.scan_code.mutli.CameraXScanActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -96,6 +97,13 @@ class CameraFragment : Fragment() {
             // 启动相机
             cameraPickerLauncher.launch(intent)
         }
+
+        binding.btnMultiScan.setOnClickListener {
+            Intent(requireActivity(), CameraXScanActivity::class.java).apply {
+                startActivity(this)
+            }
+        }
+
         model.text.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }

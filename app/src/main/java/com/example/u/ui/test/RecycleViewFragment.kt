@@ -4,18 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.u.R
 import com.example.u.databinding.FragmentRecycleViewBinding
 import com.example.u.databinding.ItemCardViewBinding
 import com.example.u.databinding.RecycleViewItemBinding
-import com.example.u.ui.viewolder.ViewHolder
 import timber.log.Timber
 
 class RecycleViewFragment : Fragment() {
@@ -91,11 +86,17 @@ class RecycleViewFragment : Fragment() {
                 item?.let {
                     Timber.d("MyViewHolder click $item")
                 }
+                if (binding.tvMore.visibility == View.GONE){
+                    binding.tvMore.visibility = View.VISIBLE
+                }else{
+                    binding.tvMore.visibility = View.GONE
+                }
             }
         }
 
         fun bind(item: String) {
             binding.item = item
+            // 强制立即更新绑定数据到视图
             binding.executePendingBindings()
         }
     }

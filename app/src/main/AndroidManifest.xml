@@ -111,6 +111,13 @@
             android:label="@string/app_name" >
 
         </activity >
+        <activity
+            android:name=".scan_code.mutli.CameraXScanActivity"
+            android:theme="@style/Theme.NoActionBar"
+            android:exported="true"
+            android:label="@string/app_name" >
+
+        </activity >
         <activity android:name="com.example.u.scan_code.ScanTestActivity" />
         <activity android:name="com.example.u.scan_code.ScanActivity" />
 
