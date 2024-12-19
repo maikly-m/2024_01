@@ -32,6 +32,7 @@ import com.google.mlkit.vision.common.InputImage
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.util.concurrent.Executors
 
 class CameraXScanActivity : AppCompatActivity() {
 
@@ -40,6 +41,7 @@ class CameraXScanActivity : AppCompatActivity() {
     private lateinit var previewView: PreviewView
     private lateinit var overlayView: OverlayView
     private var isScanning = true // 控制扫描状态
+    private val executor = Executors.newSingleThreadExecutor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -146,7 +148,7 @@ class CameraXScanActivity : AppCompatActivity() {
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
                 .also {
-                    it.setAnalyzer(ContextCompat.getMainExecutor(this)) { imageProxy ->
+                    it.setAnalyzer(executor) { imageProxy ->
                         processImageProxy(imageProxy)
                     }
                 }
@@ -179,14 +181,16 @@ class CameraXScanActivity : AppCompatActivity() {
             scanner.process(image)
                 .addOnSuccessListener { barcodes ->
                     if (barcodes.isNotEmpty()){
-                        if (barcodes.size > 1) {
+                        if (barcodes.size > 0) {
                             for (barcode in barcodes) {
                                 Timber.d("MLKit , Barcode: ${barcode.rawValue}")
                             }
                             val rects = barcodes.mapNotNull { it.boundingBox }
                             rects.let {
                                 imageToBitmap(mediaImage, imageProxy.imageInfo.rotationDegrees)?.run {
-                                    overlayView.setBarcodeRects(this, it)
+                                    overlayView.post {
+                                        overlayView.setBarcodeRects(this, it)
+                                    }
                                 }
                             }
                         } else {
