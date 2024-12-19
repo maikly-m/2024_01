@@ -45,7 +45,7 @@ auto-value = { module = "com.google.auto.value:auto-value", version.ref = "autoV
 auto-value-gson = { module = "com.ryanharter.auto.value:auto-value-gson", version.ref = "autoValueGson" }
 androidpicker-common = { module = "com.github.gzu-liyujiang.AndroidPicker:Common", version.ref = "androidPickerCommon" }
 androidpicker-wheelpicker = { module = "com.github.gzu-liyujiang.AndroidPicker:WheelPicker", version.ref = "androidPickerWheelPicker" }
-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
+mlkit-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 compressor = { module = "id.zelory:compressor", version.ref = "compressor" }
 material-dialogs-core = { module = "com.afollestad.material-dialogs:core", version.ref = "materialDialogsCore" }

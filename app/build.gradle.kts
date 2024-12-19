@@ -120,7 +120,7 @@ dependencies {
     implementation(libs.material.dialogs.core)
     implementation(libs.androidpicker.common)
     implementation(libs.androidpicker.wheelpicker)
-    implementation(libs.barcode.scanning)
+    implementation(libs.mlkit.barcode.scanning)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.lifecycle)
