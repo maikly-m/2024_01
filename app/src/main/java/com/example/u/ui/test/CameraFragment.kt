@@ -1,6 +1,7 @@
 package com.example.u.ui.test
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -138,7 +139,39 @@ class CameraFragment : Fragment() {
     }
 
     // 获取系统相册图片
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val imageUris = mutableListOf<Uri>()
+
+            result.data?.let { data ->
+                if (data.clipData != null) {
+                    // 多选模式
+                    val count = data.clipData!!.itemCount
+                    for (i in 0 until minOf(count, 4)) { // 限制最多 4 张
+                        imageUris.add(data.clipData!!.getItemAt(i).uri)
+                    }
+                } else if (data.data != null) {
+                    // 单选模式
+                    imageUris.add(data.data!!)
+                }
+            }
+
+            // 处理选中的图片
+            handleSelectedImages(imageUris)
+        }
+    }
+
+    private fun handleSelectedImages(imageUris: List<Uri>) {
+        // 这里是处理选中图片的逻辑
+        imageUris.forEach { uri ->
+            Timber.d("Selected image URI: $uri")
+            // 例如：显示在 ImageView 或上传到服务器
+        }
+    }
+
+
+    // 获取系统相册图片
+    private val pickImageLauncher1 = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             // 例如，你可以将选中的图片显示到 ImageView 中
             binding.imgGallery.setImageURI(uri)
@@ -164,8 +197,14 @@ class CameraFragment : Fragment() {
     }
 
     private fun openGallery() {
-        pickImageLauncher.launch("image/*")
+        val intent = Intent(Intent.ACTION_PICK).apply {
+            type = "image/*"
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true) // 启用多选
+        }
+        pickImageLauncher.launch(Intent.createChooser(intent, "Select up to 4 images"))
     }
+
+
 
     private fun getMimeType(uri: Uri, context: Context): String? {
         val contentResolver: ContentResolver = context.contentResolver
