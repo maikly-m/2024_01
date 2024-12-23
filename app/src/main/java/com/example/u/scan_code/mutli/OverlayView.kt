@@ -79,7 +79,7 @@ class OverlayView @JvmOverloads constructor(
         image?.let {
             if (src != null && dst != null){
                 // 绘制 Bitmap
-                canvas.drawBitmap(it, src, dst!!, paint)
+                //canvas.drawBitmap(it, src, dst!!, paint)
                 barcodeRects.forEach { rect ->
                     canvas.drawRect(rect, paint)
                 }

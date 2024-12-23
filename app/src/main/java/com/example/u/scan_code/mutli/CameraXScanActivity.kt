@@ -11,6 +11,7 @@ import android.graphics.YuvImage
 import android.media.Image
 import android.net.Uri
 import android.os.Bundle
+import android.util.Size
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
@@ -20,6 +21,8 @@ import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
+import androidx.camera.core.resolutionselector.ResolutionSelector
+import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
@@ -48,6 +51,7 @@ class CameraXScanActivity : AppCompatActivity() {
         setContentView(R.layout.activity_custom_scan_camerax)
 
         previewView = findViewById(R.id.previewView)
+        previewView.scaleType = PreviewView.ScaleType.FIT_CENTER
         overlayView = findViewById(R.id.overlayView)
         scanTest = findViewById(R.id.scan_test)
         scanTest.setOnClickListener {
@@ -92,7 +96,8 @@ class CameraXScanActivity : AppCompatActivity() {
                 Barcode.FORMAT_AZTEC,
                 Barcode.FORMAT_CODABAR,
                 Barcode.FORMAT_CODE_39,
-                Barcode.FORMAT_CODE_128)
+                Barcode.FORMAT_CODE_128
+            )
             .build()
         scanner = BarcodeScanning.getClient(options)
 
@@ -103,13 +108,14 @@ class CameraXScanActivity : AppCompatActivity() {
     }
 
     // 获取系统相册图片
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
-            uriToBitmap(this, it)?.run {
-                processBitmapImage(this)
+    private val pickImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                uriToBitmap(this, it)?.run {
+                    processBitmapImage(this)
+                }
             }
         }
-    }
 
     private fun openGallery() {
         pickImageLauncher.launch("image/*")
@@ -137,14 +143,26 @@ class CameraXScanActivity : AppCompatActivity() {
         isScanning = true
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
+
+            // 配置 Preview，设置分辨率
+            val resolutionSelector = ResolutionSelector.Builder().setResolutionStrategy(
+                ResolutionStrategy(
+                    Size(1920, 1080),
+                    ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER
+                )
+            )
+                .build()
+
             val cameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder()
+                .setResolutionSelector(resolutionSelector)
                 .build()
                 .also {
-                it.surfaceProvider = previewView.surfaceProvider
-            }
+                    it.surfaceProvider = previewView.surfaceProvider
+                }
 
             val imageAnalyzer = ImageAnalysis.Builder()
+                .setResolutionSelector(resolutionSelector)
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
                 .also {
@@ -180,14 +198,18 @@ class CameraXScanActivity : AppCompatActivity() {
             val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
             scanner.process(image)
                 .addOnSuccessListener { barcodes ->
-                    if (barcodes.isNotEmpty()){
+                    if (barcodes.isNotEmpty()) {
                         if (barcodes.size > 0) {
                             for (barcode in barcodes) {
                                 Timber.d("MLKit , Barcode: ${barcode.rawValue}")
                             }
+                            Timber.d("MLKit , mediaImage: ${mediaImage.width}x${mediaImage.height}")
                             val rects = barcodes.mapNotNull { it.boundingBox }
                             rects.let {
-                                imageToBitmap(mediaImage, imageProxy.imageInfo.rotationDegrees)?.run {
+                                imageToBitmap(
+                                    mediaImage,
+                                    imageProxy.imageInfo.rotationDegrees
+                                )?.run {
                                     overlayView.post {
                                         overlayView.setBarcodeRects(this, it)
                                     }
@@ -217,7 +239,7 @@ class CameraXScanActivity : AppCompatActivity() {
         Timber.d("MLKit , processBitmapImage: ")
         scanner.process(image)
             .addOnSuccessListener { barcodes ->
-                if (barcodes.isNotEmpty()){
+                if (barcodes.isNotEmpty()) {
                     if (barcodes.size > 1) {
                         for (barcode in barcodes) {
                             Timber.d("MLKit , Barcode: ${barcode.rawValue}")

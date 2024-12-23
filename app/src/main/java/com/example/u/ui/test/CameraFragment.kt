@@ -22,10 +22,10 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
+import com.example.u.camera.Camera2ScanActivity
 import com.example.u.camera.CameraActivity
 import com.example.u.databinding.FragmentCameraBinding
 import com.example.u.scan_code.ScanTestActivity
-import com.example.u.scan_code.mutli.CameraXScanActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -100,7 +100,7 @@ class CameraFragment : Fragment() {
         }
 
         binding.btnMultiScan.setOnClickListener {
-            Intent(requireActivity(), CameraXScanActivity::class.java).apply {
+            Intent(requireActivity(), Camera2ScanActivity::class.java).apply {
                 startActivity(this)
             }
         }
