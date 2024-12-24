@@ -19,13 +19,24 @@
             app:layout_constraintGuide_end="16dp"/>
 
 
+<!--        <ImageButton-->
+<!--            android:id="@id/exo_play_pause"-->
+<!--            android:layout_width="52dp"-->
+<!--            android:layout_height="52dp"-->
+<!--            android:background="?android:selectableItemBackground"-->
+<!--            app:tint="@android:color/white"-->
+<!--            android:scaleType="fitXY"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
         <ImageButton
             android:id="@id/exo_play_pause"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:background="?android:selectableItemBackground"
-            app:tint="@android:color/white"
-            android:scaleType="fitXY"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

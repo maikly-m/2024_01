@@ -20,6 +20,8 @@
             app:surface_type="texture_view"
             app:use_controller="true"
             app:controller_layout_id="@layout/layout_custom_player_controller"
+            app:play_icon="@drawable/ic_video_play"
+            app:pause_icon="@drawable/ic_video_pause"
             android:id="@+id/playerView"
             android:layout_width="match_parent"
             android:layout_height="200dp"/>
