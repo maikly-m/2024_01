@@ -1,6 +1,8 @@
 package com.example.u.ui.test
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -108,10 +110,31 @@ class CustomFragment : Fragment() {
         override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
             holder.textView.text = items[position]
             holder.textView.setTextColor(Color.BLACK)
-            if (position%2==0) {
-                holder.textView.setBackgroundColor(Color.YELLOW)
-            } else {
-                holder.textView.setBackgroundColor(Color.GRAY)
+
+            if (position%3==0) {
+                // 在视图完成布局后获取高度
+                holder.textView.post {
+                    val height = holder.textView.height
+                    val cornerRadius = height / 2f // 圆角大小为高度的一半
+                    // 设置圆角背景
+                    holder.textView.background = getRectRadiusHorizontalDrawable(Color.YELLOW, cornerRadius)
+                }
+            } else if (position%3==1){
+                // 在视图完成布局后获取高度
+                holder.textView.post {
+                    val height = holder.textView.height
+                    val cornerRadius = height / 2f // 圆角大小为高度的一半
+                    // 设置圆角背景
+                    holder.textView.background = getOvalDrawable(Color.BLUE, (cornerRadius*0.2).toInt())
+                }
+            }else{
+                // 在视图完成布局后获取高度
+                holder.textView.post {
+                    val height = holder.textView.height
+                    val cornerRadius = height / 2f // 圆角大小为高度的一半
+                    // 设置圆角背景
+                    holder.textView.background = getRingDrawable(Color.GRAY, cornerRadius, (cornerRadius*0.1f).toInt())
+                }
             }
         }
 
@@ -123,4 +146,32 @@ class CustomFragment : Fragment() {
         }
     }
 
+}
+
+fun getRectRadiusHorizontalDrawable(color: Int, r: Float): Drawable {
+    val customDrawable = GradientDrawable().apply {
+        shape = GradientDrawable.RECTANGLE
+        setColor(color)
+        cornerRadius = r
+    }
+    return customDrawable
+}
+
+fun getOvalDrawable(color: Int, w: Int): Drawable {
+    val customDrawable = GradientDrawable().apply {
+        shape = GradientDrawable.OVAL
+        setColor(Color.TRANSPARENT) // 透明填充
+        setStroke(w, color)
+    }
+    return customDrawable
+}
+
+fun getRingDrawable(color: Int, r: Float, w: Int): Drawable {
+    val customDrawable = GradientDrawable().apply {
+        shape = GradientDrawable.RECTANGLE
+        setColor(Color.TRANSPARENT)
+        setStroke(w,color)
+        cornerRadius = r
+    }
+    return customDrawable
 }
