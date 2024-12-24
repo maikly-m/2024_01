@@ -1,32 +1,50 @@
 package com.example.u.ui.test
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Outline
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkRequest
 import android.net.Uri
 import android.os.Bundle
+import android.view.GestureDetector
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import androidx.annotation.OptIn
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
-import androidx.media3.common.PlaybackException
-import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.RenderersFactory
 import com.example.u.databinding.FragmentMediaBinding
+import com.example.u.uitls.DisplayUtils
+import timber.log.Timber
 
 class MediaFragment : Fragment() {
 
-    private lateinit var exoPlayer: ExoPlayer
+    val mUri = Uri.parse("https://media.w3.org/2010/05/sintel/trailer.mp4")
+    private lateinit var mPlayer: ExoPlayer
     private var _binding: FragmentMediaBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private var mGestureDetector: GestureDetector? = null
+    private var mNetworkCallback: ConnectivityManager.NetworkCallback? = null
+    private var mCurrentPosition: Long = 0
+    private var mInitPlay = false
+
+    private var mIsPause = false
+    private var mIsBgPlaying = false
 
     @OptIn(UnstableApi::class)
     override fun onCreateView(
@@ -39,7 +57,18 @@ class MediaFragment : Fragment() {
 
         _binding = FragmentMediaBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        initPlayer()
+
+
+        //使用 texture_view， 然后裁一下圆角(只要裁剪上面)
+        binding.playerView.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                val radius: Int = DisplayUtils.dp2px(requireContext(), 16f)
+                outline.setRoundRect(0, 0, view.width, view.height, radius.toFloat())
+            }
+        }
+        binding.playerView.setClipToOutline(true)
+
+        initData()
 
         return root
     }
@@ -57,71 +86,129 @@ class MediaFragment : Fragment() {
     private fun initializeVideo() {
         val playerBuilder = ExoPlayer.Builder(requireContext())
         setRenderersFactory(playerBuilder)
-        exoPlayer = playerBuilder.build()
-        exoPlayer.setAudioAttributes(AudioAttributes.DEFAULT,  /* handleAudioFocus= */true)
-        exoPlayer.playWhenReady = false
-
-        binding.playerView.setPlayer(exoPlayer)
-
-        val uri = Uri.parse("https://media.w3.org/2010/05/sintel/trailer.mp4")
-        val mediaItem = MediaItem.fromUri(uri)
-        exoPlayer.setMediaItem(mediaItem)
-        exoPlayer.prepare()
+        mPlayer = playerBuilder.build()
+        binding.playerView.player = mPlayer
+        mPlayer.setAudioAttributes(AudioAttributes.DEFAULT,  /* handleAudioFocus= */true)
+        val mediaItem = MediaItem.fromUri(mUri)
+        mPlayer.setMediaItem(mediaItem)
+        mPlayer.prepare()
+        mPlayer.playWhenReady = true
     }
 
-
-    @OptIn(UnstableApi::class)
-    private fun initPlayer() {
-        initializeVideo()
-        exoPlayer.addListener(object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-            }
-
-            override fun onPlayerError(error: PlaybackException) {
-                exoPlayer.prepare()
-            }
-
-            override fun onPlaybackStateChanged(state: Int) {
-                if (state == Player.STATE_ENDED) {
-                    exoPlayer.seekTo(0)
-                    exoPlayer.pause()
-                    // 播放完成
+    private fun initData() {
+        // Listening network change
+        val manager =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        mNetworkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                Timber.d("NetworkCallback onAvailable")
+                if (!mInitPlay) {
+                    mInitPlay = true
+                    binding.playerView.post {
+                        initializeVideo()
+                        initListener()
+                    }
                 } else {
+                    binding.playerView.post {
+                        mPlayer.prepare()
+                        mPlayer.playWhenReady = true
+                        mPlayer.seekTo(mCurrentPosition)
+                        mPlayer.pause()
+                    }
                 }
             }
-        })
 
-        // 3s后开始清屏
-        binding.playerView.setControllerShowTimeoutMs(3000)
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                mCurrentPosition = mPlayer.currentPosition
+            }
+        }
+        manager.registerNetworkCallback(NetworkRequest.Builder().build(), mNetworkCallback!!)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun initListener() {
+        mGestureDetector =
+            GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
+                override fun onDoubleTap(event: MotionEvent): Boolean {
+                    //双击暂停或者播放
+                    controllerVideo()
+                    return true
+                }
+            })
+        binding.playerView.setOnTouchListener { v, event -> mGestureDetector!!.onTouchEvent(event) }
+
+        //监听播放状态
+
+        // 监听播放状态
+        mPlayer.addListener(object : Player.Listener {
+
+            @OptIn(UnstableApi::class)
+            override fun onPlaybackStateChanged(state: Int) {
+                if (state == Player.STATE_READY) {
+                    // 媒体源已准备好，可以播放
+                    binding.playerView.showController()
+                } else if (state == Player.STATE_IDLE) {
+                    // 播放器处于空闲状态或正在缓冲
+                    // 其他状态，可能是错误状态
+                    binding.playerView.showController()
+                }
+
+//                if (state == Player.STATE_ENDED) {
+//                    // 播放完毕，返回到初始播放位置
+//                    mPlayer.seekTo(0)
+//                    mPlayer.pause()
+//                }
+            }
+
+            override fun onPositionDiscontinuity(
+                oldPosition: Player.PositionInfo,
+                newPosition: Player.PositionInfo,
+                reason: Int
+            ) {
+                mCurrentPosition = newPosition.positionMs
+            }
+        })
+        // 无限循环
+        // mPlayer.repeatMode = Player.REPEAT_MODE_ALL
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun controllerVideo() {
+        if (mPlayer.playbackState == Player.STATE_ENDED) {
+            mPlayer.seekTo(mPlayer.currentMediaItemIndex, C.TIME_UNSET)
+        } else if (mPlayer.isPlaying) {
+            mPlayer.pause()
+        } else {
+            mPlayer.play()
+        }
+    }
+
+    override fun onResume() {
+        if (mIsPause && mIsBgPlaying) {
+            // retrieve play state
+            mPlayer.play()
+        }
+        mIsPause = false
+        super.onResume()
+    }
+
+    override fun onPause() {
+        mIsPause = true
+        mIsBgPlaying = mPlayer.isPlaying
+        mPlayer.pause()
+        super.onPause()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        mPlayer.release()
+        val manager =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        manager.unregisterNetworkCallback(mNetworkCallback!!)
     }
 
-    override fun onPause() {
-        super.onPause()
-        // 在 onPause 时暂停播放
-        exoPlayer.pause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        // 在 onStop 时释放播放器资源
-        exoPlayer.release()
-    }
-
-    private fun setVideoPlaySpeed(speed: String) {
-        val playbackParameters =
-            when (speed) {
-                "2.0x" -> PlaybackParameters(2.0f, 1.0f)
-                "0.75x" -> PlaybackParameters(0.75f, 1.0f)
-                "0.5x" -> PlaybackParameters(0.5f, 1.0f)
-                "1.0x" -> PlaybackParameters(1.0f, 1.0f)
-                else -> PlaybackParameters(1.0f, 1.0f)
-            }
-        exoPlayer.playbackParameters = playbackParameters
-    }
 }
 

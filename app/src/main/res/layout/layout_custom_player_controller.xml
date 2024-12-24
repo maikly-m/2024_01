@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="16dp"/>
+
+
+        <ImageButton
+            android:id="@id/exo_play_pause"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="?android:selectableItemBackground"
+            app:tint="@android:color/white"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/exo_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:textSize="14sp"
+            tools:text="00:00"
+            android:textColor="@color/white"
+            android:shadowRadius="3"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            app:layout_constraintBottom_toTopOf="@id/gl_bottom"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
+        <TextView
+            android:id="@+id/exo_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:textSize="14sp"
+            tools:text="00:00"
+            android:textColor="@color/white"
+            android:shadowRadius="3"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            app:layout_constraintBottom_toTopOf="@id/gl_bottom"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.media3.ui.DefaultTimeBar
+            android:id="@+id/exo_progress"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            app:buffered_color="#4dffffff"
+            app:layout_constraintStart_toEndOf="@+id/exo_position"
+            app:layout_constraintEnd_toStartOf="@+id/exo_duration"
+            app:layout_constraintTop_toTopOf="@id/exo_position"
+            app:layout_constraintBottom_toBottomOf="@id/exo_position"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -16,8 +16,12 @@
         android:orientation="vertical">
 
         <androidx.media3.ui.PlayerView
+            app:show_timeout="1000"
+            app:surface_type="texture_view"
+            app:use_controller="true"
+            app:controller_layout_id="@layout/layout_custom_player_controller"
             android:id="@+id/playerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="200dp"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout >

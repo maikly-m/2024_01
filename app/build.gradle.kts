@@ -21,6 +21,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // 配置 NDK 支持的架构
+        ndk {
+            abiFilters.add("armeabi-v7a")
+            abiFilters.add("arm64-v8a")
+        }
     }
     lint {
         baseline = file("lint-baseline.xml")
@@ -61,6 +67,16 @@ android {
         viewBinding = true
         buildConfig = true
     }
+
+//    // 配置 NDK 架构过滤器，指定只打包 arm64 和 armeabi-v7a 架构
+//    splits {
+//        abi {
+//            isEnable = true
+//            reset()  // 清除默认值，确保只有需要的架构被打包
+//            include("armeabi-v7a", "arm64-v8a")  // 只打包这两种架构
+//            isUniversalApk = false  // 禁用生成包含所有架构的通用 APK
+//        }
+//    }
 
     packagingOptions {
         exclude("META-INF/gradle/incremental.annotation.processors")
