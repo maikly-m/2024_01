@@ -1,5 +1,6 @@
 package com.example.u.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.u.R
+import com.example.u.TransparentActivity
 import com.example.u.databinding.FragmentHomeBinding
 import timber.log.Timber
 
@@ -73,6 +75,11 @@ class HomeFragment : Fragment() {
         }
         binding.btnAliVerify.setOnClickListener {
             findNavController().navigate(R.id.home2ali_slide_verify)
+        }
+        binding.btnTransparentActivity.setOnClickListener {
+            Intent(requireContext(), TransparentActivity::class.java).apply {
+                startActivity(this)
+            }
         }
 
 
